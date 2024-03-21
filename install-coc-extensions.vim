@@ -1,0 +1,28 @@
+let g:coc_global_extensions =
+  \[
+  \  'coc-css',
+  \  'coc-cssmodules',
+  \  'coc-docker',
+  \  'coc-emmet',
+  \  'coc-eslint',
+  \  'coc-git',
+  \  'coc-go',
+  \  'coc-highlight',
+  \  'coc-html',
+  \  'coc-json',
+  \  'coc-lua',
+  \  'coc-marketplace',
+  \  'coc-pairs',
+  \  'coc-prettier',
+  \  'coc-prisma',
+  \  'coc-pyls',
+  \  'coc-rust-analyzer',
+  \  'coc-sh',
+  \  'coc-snippets',
+  \  'coc-sourcekit',
+  \  'coc-sql',
+  \  'coc-svelte',
+  \  'coc-tailwindcss',
+  \  'coc-tsserver',
+  \  'coc-yaml'
+  \]
