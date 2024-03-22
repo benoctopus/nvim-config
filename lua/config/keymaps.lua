@@ -4,49 +4,50 @@
 --
 --
 
-local harpoon = require("harpoon")
+-- copilot
 
-require("harpoon"):setup()
+vim.api.nvim_set_keymap(
+  "i",
+  "<localleader><Tab>",
+  'copilot#Accept("\\<CR>")',
+  { expr = true, noremap = true, silent = true }
+)
 
-vim.keymap.set("n", "<leader>ha", function()
-  harpoon:list():append()
-end)
-vim.keymap.set("n", "<leader>hf", function()
-  harpoon.ui:toggle_quick_menu(harpoon:list())
-end)
+vim.g.copilot_no_tab_map = vim.v["true"]
 
-vim.keymap.set("n", "<leader>h1", function()
-  harpoon:list():select(1)
-end)
+-- lsp
 
-vim.keymap.set("n", "<leader>h2", function()
-  harpoon:list():select(2)
-end)
+local lspconfig = require("lspconfig")
 
-vim.keymap.set("n", "<leader>h3", function()
-  harpoon:list():select(3)
-end)
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float)
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 
-vim.keymap.set("n", "<leader>h4", function()
-  harpoon:list():select(4)
-end)
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-vim.keymap.set("n", "<leader>h5", function()
-  harpoon:list():select(5)
-end)
-
-vim.keymap.set("n", "<leader>h6", function()
-  harpoon:list():select(6)
-end)
-
-vim.keymap.set("n", "<leader>h7", function()
-  harpoon:list():select(7)
-end)
-
-vim.keymap.set("n", "<leader>h8", function()
-  harpoon:list():select(8)
-end)
-
-vim.keymap.set("n", "<leader>h9", function()
-  harpoon:list():select(9)
-end)
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "<leader>K", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set("n", "<leader>wl", function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set("n", "<leader>T", vim.lsp.buf.type_definition, opts)
+    vim.keymap.set("n", "<localleader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set({ "n", "v" }, "<localleader>ac", vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<localleader>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, opts)
+  end,
+})

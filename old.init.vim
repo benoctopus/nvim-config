@@ -70,8 +70,8 @@ EOF
 
 command -nargs=? -bar Gdl call setqflist(map(systemlist("git diff --pretty='' --name-only <args>"), '{"filename": v:val, "lnum": 1}'))
 
-let g:ranger_map_keys = 0
 let g:NERDTreeHijackNetrw = 0
+let g:ranger_map_keys = 0
 let g:ranger_replace_netrw = 1
 let g:far#enable_undo = 1
 let g:far#source = 'rgnvim'
