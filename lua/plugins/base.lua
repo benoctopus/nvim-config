@@ -2,6 +2,44 @@
 -- stylua: ignore
 
 return {
+  {
+    dir = "~/code/vim-plugins/bdi.nvim"
+  },
+  {
+    "echasnovski/mini.animate",
+    enabled = false,
+    event = "VeryLazy",
+    opts = function()
+      -- don't use animate when scrolling with the mouse
+      local mouse_scrolled = false
+      for _, scroll in ipairs({ "Up", "Down" }) do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set({ "", "i" }, key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
+
+      local animate = require("mini.animate")
+      return {
+        resize = {
+          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
+        },
+        scroll = {
+          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
+          subscroll = animate.gen_subscroll.equal({
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1
+            end,
+          }),
+        },
+      }
+    end,
+  },
   { "akinsho/bufferline.nvim", enabled = false },
   { 'rafi/awesome-vim-colorschemes' },
   {
@@ -131,8 +169,6 @@ return {
           }):find()
       end
 
-
-
       vim.keymap.set("n", "<localleader>hd", updateTabline, { noremap = true })
 
       vim.keymap.set("n", "<leader>hf", function() toggle_telescope(harpoon:list()) end,
@@ -144,7 +180,6 @@ return {
       vim.keymap.set("n", "<leader>hh", function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end)
-
       vim.keymap.set("n", "<leader>h1", function()
         harpoon:list():select(1)
       end)
@@ -208,7 +243,6 @@ return {
   },
   {
     'github/copilot.vim'
-
   },
   {
     "simrat39/symbols-outline.nvim",
