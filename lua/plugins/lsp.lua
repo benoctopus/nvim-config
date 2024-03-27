@@ -4,7 +4,17 @@ return {
     opts = {
       -- make sure mason installs the server
       servers = {
-
+        yamlls = {
+          filetypes = { "yaml" },
+          settings = {
+            yaml = {
+              schemas = {
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+                ["https://raw.githubusercontent.com/docker/compose/v1/compose/config/config_schema_v1.json"] = "/*docker-compose*",
+              },
+            },
+          },
+        },
         sqlls = {
           capabilities = capabilities,
           filetypes = { "sql" },
