@@ -70,15 +70,14 @@ return {
       build = "make",
     },
     opts = function(_, opts)
-      vim.tbl_deep_extend("force", opts.defaults, {
+      vim.tbl_deep_extend("force", opts.defaults or {}, {
         layout_strategy = "horizontal",
         layout_config = { prompt_position = "top" },
         sorting_strategy = "ascending",
         winblend = 0,
       })
-      vim.tbl_deep_extend("force", opts.defaults.mappings, {
-      })
-      vim.tbl_deep_extend("force", opts.defaults.mappings.i, {
+      opts.defaults.mappings = opts.defaults.mappings or {}
+      vim.tbl_deep_extend("force", opts.defaults.mappings.i or {}, {
         ["<C-j>"] = "move_selection_next",
         ["<C-k>"] = "move_selection_previous"
       })
@@ -89,7 +88,10 @@ return {
     keys = {
       {"<leader>/", false},
       -- change a keymap
-      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+      { "<leader>ff",
+        function () require('telescope.builtin').find_files({ hidden = true }) end,
+        desc = "Find Files"
+      },
       { "<leader>fg", function() require('telescope.builtin').live_grep() end, desc = "Find Files" },
       -- add a keymap to browse plugin files
       {
@@ -152,27 +154,8 @@ return {
           sync_on_ui_close = false,
         }
       })
-      local conf = require("telescope.config").values
-      local function toggle_telescope(harpoon_files)
-          local file_paths = {}
-          for _, item in ipairs(harpoon_files.items) do
-              table.insert(file_paths, item.value)
-          end
-
-          require("telescope.pickers").new({}, {
-              prompt_title = "Harpoon",
-              finder = require("telescope.finders").new_table({
-                  results = file_paths,
-              }),
-              previewer = conf.file_previewer({}),
-              sorter = conf.generic_sorter({}),
-          }):find()
-      end
 
       vim.keymap.set("n", "<localleader>hd", updateTabline, { noremap = true })
-
-      vim.keymap.set("n", "<leader>hf", function() toggle_telescope(harpoon:list()) end,
-          { desc = "Open harpoon window" })
 
       vim.keymap.set("n", "<leader>ha", function()
         harpoon:list():append()
@@ -236,9 +219,6 @@ return {
     'rmagatti/auto-session'
   },
   {
-    'tpope/vim-fugitive'
-  },
-  {
     'ellisonleao/glow.nvim'
   },
   {
@@ -263,6 +243,11 @@ return {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-emoji",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
@@ -273,31 +258,45 @@ return {
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
       end
 
+      opts.sources = {
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+        { name = "path" },
+        { name = "emoji" },
+      }
+
       local luasnip = require("luasnip")
+      opts.snippet = {
+        expand = function(args)
+          require("luasnip").lsp_expand(args.body)
+        end,
+      }
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<C-J>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-K>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.confirm({select = true})
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-            cmp.select_next_item()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
+        ["<S-TAB>"] = cmp.mapping(function(fallback)
+          if luasnip.expand_or_jumpable() then
+             luasnip.expand_or_jump()
+          else fallback()
           end
         end, { "i", "s" }),
-        ["<S-tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then cmp.confirm({select = true})
+          else fallback()
+          -- if cmp.visible() then
+          --   cmp.confirm({select = true})
+          -- elseif luasnip.expand_or_jumpable() then
+          --   luasnip.expand_or_jump()
+          --   cmp.select_next_item()
+          -- elseif has_words_before() then
+          --   cmp.complete()
+          -- else
+          --   fallback()
+          -- end
           end
         end, { "i", "s" }),
       })

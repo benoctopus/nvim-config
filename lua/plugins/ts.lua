@@ -1,0 +1,51 @@
+return {
+  -- {
+  --   "pmizio/typescript-tools.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   opts = {
+  --     root_dir = require("lspconfig.util").root_pattern(".git"),
+  --     settings = {
+  --       jsx_close_tag = {
+  --         enable = true,
+  --         filetypes = { "javascriptreact", "typescriptreact" },
+  --       },
+  --
+  --       tsserver_file_preferences = {
+  --         includeInlayParameterNameHints = "all",
+  --         includeCompletionsForModuleExports = true,
+  --         includeCompletionsForImportStatements = true,
+  --         includeAutomaticOptionalChainCompletions = true,
+  --         includeCompletionsWithClassMemberSnippets = true,
+  --         includeCompletionsWithObjectLiteralMethodSnippets = true,
+  --         quotePreference = "double",
+  --         includePackageJsonAutoImports = "on",
+  --       },
+  --       expose_as_code_action = {
+  --         "fix_all",
+  --         "add_missing_imports",
+  --         "remove_unused",
+  --         "remove_unused_imports",
+  --         "organize_imports",
+  --       },
+  --     },
+  --   },
+  -- },
+  -- {
+  --   "stevearc/conform.nvim",
+  --   dependencies = {
+  --     {
+  --       "williamboman/mason.nvim",
+  --       opts = function(_, opts)
+  --         opts.ensure_installed = opts.ensure_installed or {}
+  --         vim.list_extend(opts.ensure_installed, { "prettier", "prettierd" })
+  --       end,
+  --     },
+  --   },
+  --   opts = function(_, opts)
+  --     local formatters_by_ft = opts.formatters_by_ft or {}
+  --     opts.formatters_by_ft = vim.tbl_extend("force", formatters_by_ft, {
+  --       javascript = { "prettierd", "prettier" },
+  --     })
+  --   end,
+  -- },
+}

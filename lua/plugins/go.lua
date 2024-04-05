@@ -1,13 +1,6 @@
 -- stylua: ignore
 
 return {
-  {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      table.insert(opts.ensure_installed, "js-debug-adapter")
-    end,
-  },
 	{
 		'edolphin-ydf/goimpl.nvim',
 		dependencies = {
@@ -25,7 +18,6 @@ return {
 	},
   {
     "mfussenegger/nvim-dap",
-    optional = true,
     dependencies = {
       {
         "williamboman/mason.nvim",
@@ -44,7 +36,7 @@ return {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt", "golines" })
+      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt", "golines", "yaml-language-server", "terraform-ls" })
     end,
   },
   {
@@ -55,15 +47,6 @@ return {
     end,
   },
   { "folke/neodev.nvim", opts = {} },
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-neotest/nvim-nio",
-      "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter"
-    }
-  },
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
@@ -78,65 +61,37 @@ return {
       "mfussenegger/nvim-dap"
     }
   },
-  {
-    "nvim-neotest/neotest-go",
-  },
-  {
-    "nvimtools/none-ls.nvim",
-    optional = true,
-    dependencies = {
-      {
-        "williamboman/mason.nvim",
-        opts = function(_, opts)
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl" })
-        end,
-      },
-    },
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      opts.sources = vim.list_extend(opts.sources or {}, {
-        nls.builtins.code_actions.gomodifytags,
-        nls.builtins.code_actions.impl,
-        nls.builtins.formatting.goimports,
-        nls.builtins.formatting.gofumpt,
-      })
-    end,
-  },
-  {
-    "stevearc/conform.nvim",
-    optional = true,
-    opts = {
-      formatters_by_ft = {
-        go = { "goimports", "gofumpt", "golines" },
-      },
-    },
-  },
-  {
-    "nvim-neotest/neotest",
-    optional = true,
-    dependencies = {
-      "nvim-neotest/neotest-go",
-      "nvim-neotest/nvim-nio",
-      "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter"
-    },
-    keys = {
-      { "<localleader>ttn", function() require("neotest").run.run() end, desc = "Test Nearest" },
-      { "<localleader>ttf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test File" },
-      { "<localleader>tdn", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug Nearest" },
-    },
-    opts = {
-      adapters = {
-        ["neotest-go"] = {
-          -- Here we can set options for neotest-go, e.g.
-          -- args = { "-tags=integration" }
-          recursive_run = true,
-        },
-      },
-    },
-  },
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   dependencies = {
+  --     {
+  --       "williamboman/mason.nvim",
+  --       opts = function(_, opts)
+  --         opts.ensure_installed = opts.ensure_installed or {}
+  --         vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl" })
+  --       end,
+  --     },
+  --   },
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.sources = vim.list_extend(opts.sources or {}, {
+  --       nls.builtins.code_actions.gomodifytags,
+  --       nls.builtins.code_actions.impl,
+  --       nls.builtins.formatting.goimports,
+  --       nls.builtins.formatting.gofumpt,
+  --     })
+  --   end,
+  -- },
+  -- {
+  --   "stevearc/conform.nvim",
+  --   opts = function(_, opts)
+  --     opts.formatters_by_ft = opts.formatters_by_ft or {}
+  --     opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
+  --
+  --     opts.formatters.golines = opts.formatters.golines or {}
+  --     opts.formatters.golines.args = { "-m", "80"}
+  --   end,
+  -- },
   {
     "neovim/nvim-lspconfig",
     opts = {
