@@ -23,7 +23,6 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'rhysd/vim-clang-format'
 Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw);
 Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
-Plug 'https://github.com/lifepillar/pgsql.vim' " PSQL Pluging needs :SQLSetType pgsql.vim
 Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 Plug 'https://github.com/neoclide/coc.nvim', {'branch': 'release'}  " Auto Completion

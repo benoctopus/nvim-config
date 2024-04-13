@@ -61,6 +61,16 @@ return {
       "mfussenegger/nvim-dap"
     }
   },
+  {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
+
+      opts.formatters.golines = opts.formatters.golines or {}
+      opts.formatters.golines.args = { "-m", "80" }
+    end,
+  },
   -- {
   --   "nvimtools/none-ls.nvim",
   --   dependencies = {
@@ -82,16 +92,15 @@ return {
   --     })
   --   end,
   -- },
-  -- {
-  --   "stevearc/conform.nvim",
-  --   opts = function(_, opts)
-  --     opts.formatters_by_ft = opts.formatters_by_ft or {}
-  --     opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
-  --
-  --     opts.formatters.golines = opts.formatters.golines or {}
-  --     opts.formatters.golines.args = { "-m", "80"}
-  --   end,
-  -- },
+  {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
+      opts.formatters.golines = opts.formatters.golines or {}
+      opts.formatters.golines.args = { "-m", "80"}
+    end,
+  },
   {
     "neovim/nvim-lspconfig",
     opts = {
