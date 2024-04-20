@@ -19,12 +19,14 @@ return {
       "L3MON4D3/LuaSnip",
       "dcampos/cmp-emmet-vim",
       "mattn/emmet-vim",
+      "hrsh7th/cmp-nvim-lua",
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       opts.experimental = { ghost_text = false }
 
       vim.tbl_extend("force", opts.sources, {
+        { name = "nvim_lua" },
         { name = "luasnip" },
       })
 

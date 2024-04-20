@@ -63,43 +63,16 @@ return {
   },
   {
     "stevearc/conform.nvim",
-    opts = function(_, opts)
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
-      opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
-
-      opts.formatters.golines = opts.formatters.golines or {}
-      opts.formatters.golines.args = { "-m", "80" }
-    end,
-  },
-  -- {
-  --   "nvimtools/none-ls.nvim",
-  --   dependencies = {
-  --     {
-  --       "williamboman/mason.nvim",
-  --       opts = function(_, opts)
-  --         opts.ensure_installed = opts.ensure_installed or {}
-  --         vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl" })
-  --       end,
-  --     },
-  --   },
-  --   opts = function(_, opts)
-  --     local nls = require("null-ls")
-  --     opts.sources = vim.list_extend(opts.sources or {}, {
-  --       nls.builtins.code_actions.gomodifytags,
-  --       nls.builtins.code_actions.impl,
-  --       nls.builtins.formatting.goimports,
-  --       nls.builtins.formatting.gofumpt,
-  --     })
-  --   end,
-  -- },
-  {
-    "stevearc/conform.nvim",
-    opts = function(_, opts)
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
-      opts.formatters_by_ft.go = { "goimports", "gofumpt", "golines" }
-      opts.formatters.golines = opts.formatters.golines or {}
-      opts.formatters.golines.args = { "-m", "80"}
-    end,
+    opts = {
+      formatters_by_ft = {
+        go = { "golines", "goimports" }
+      },
+      formatters = {
+        golines = {
+          args = { "-m", "80", "--base-formatter", "gofumpt" }
+        }
+      }
+    }
   },
   {
     "neovim/nvim-lspconfig",

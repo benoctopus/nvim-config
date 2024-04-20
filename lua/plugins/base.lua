@@ -6,6 +6,13 @@ return {
     dir = "~/code/vim-plugins/bdi.nvim"
   },
   {
+    "rest-nvim/rest.nvim",
+    ft = "http",
+    config = function()
+      require("rest-nvim").setup()
+    end,
+  },
+  {
     "echasnovski/mini.animate",
     enabled = false,
     event = "VeryLazy",
