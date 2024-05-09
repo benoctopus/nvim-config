@@ -30,6 +30,11 @@ return {
         desc = "Copy git link to lines to clipboard",
         mode = { "v" },
       },
+      {
+        "<localleader>gpd",
+        "<cmd>G pull origin dev --no-rebase<cr>",
+        desc = "git pull origin dev --no-rebase",
+      },
     },
   },
 }
