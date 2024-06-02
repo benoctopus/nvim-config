@@ -1,6 +1,7 @@
 {
   "extras": [
     "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.test.core",
     "lazyvim.plugins.extras.dap.nlua",
     "lazyvim.plugins.extras.editor.dial",
     "lazyvim.plugins.extras.editor.trouble-v3",
@@ -16,11 +17,10 @@
     "lazyvim.plugins.extras.lang.terraform",
     "lazyvim.plugins.extras.lang.typescript",
     "lazyvim.plugins.extras.lang.yaml",
-    "lazyvim.plugins.extras.linting.eslint",
-    "lazyvim.plugins.extras.test.core"
+    "lazyvim.plugins.extras.linting.eslint"
   ],
   "news": {
-    "NEWS.md": "3314"
+    "NEWS.md": "5204"
   },
-  "version": 3
+  "version": 6
 }
