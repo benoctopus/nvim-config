@@ -3,6 +3,9 @@ return {
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
     "L3MON4D3/LuaSnip",
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
     keys = function()
       return {}
     end,
@@ -23,13 +26,18 @@ return {
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
+      local cmp = require("cmp")
       opts.experimental = { ghost_text = false }
 
-      vim.tbl_extend("force", opts.sources, {
-        { name = "nvim_lua" },
+      cmp.config.sources({
+        { name = "emmet_vim", priority = 1000 },
         { name = "luasnip" },
+        { name = "nvim_lsp" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+        { name = "emoji" },
       })
-
+      -- `:` cmdline setup.
       -- opts.sources = {
       --   { name = "nvim_lsp" },
       --   { name = "emmet_vim" },
@@ -46,7 +54,6 @@ return {
       --     require("luasnip").lsp_expand(args.body)
       --   end,
       -- }
-      local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<C-J>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
@@ -63,16 +70,6 @@ return {
             cmp.confirm({ select = true })
           else
             fallback()
-            -- if cmp.visible() then
-            --   cmp.confirm({select = true})
-            -- elseif luasnip.expand_or_jumpable() then
-            --   luasnip.expand_or_jump()
-            --   cmp.select_next_item()
-            -- elseif has_words_before() then
-            --   cmp.complete()
-            -- else
-            --   fallback()
-            -- end
           end
         end, { "i", "s" }),
       })

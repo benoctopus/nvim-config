@@ -31,7 +31,7 @@ return {
         "terraform",
         "dockerfile",
         "sql",
-        "prisma"
+        "prisma",
       },
     },
   },

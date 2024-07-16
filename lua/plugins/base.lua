@@ -6,13 +6,6 @@ return {
     dir = "~/code/vim-plugins/bdi.nvim"
   },
   {
-    "rest-nvim/rest.nvim",
-    ft = "http",
-    config = function()
-      require("rest-nvim").setup()
-    end,
-  },
-  {
     "echasnovski/mini.animate",
     enabled = false,
     event = "VeryLazy",
@@ -137,7 +130,9 @@ return {
     'brooth/far.vim'
   },
   {
-    'easymotion/vim-easymotion'
+    'easymotion/vim-easymotion',
+    enabled = false
+
   },
   {
     'rhysd/vim-clang-format'
@@ -152,7 +147,17 @@ return {
     'ellisonleao/glow.nvim'
   },
   {
-    'github/copilot.vim'
+    'github/copilot.vim',
+    config = function()
+      vim.api.nvim_set_keymap(
+        "i",
+        "<localleader><Tab>",
+        'copilot#Accept("\\<CR>")',
+        { expr = true, noremap = true, silent = true }
+      )
+
+      vim.g.copilot_no_tab_map = vim.v["true"]
+    end,
   },
   {
     "simrat39/symbols-outline.nvim",

@@ -1,9 +1,6 @@
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
-    config = function()
-      require("lsp-zero")
-    end,
   },
   {
     "folke/trouble.nvim",

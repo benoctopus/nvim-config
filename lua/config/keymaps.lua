@@ -6,15 +6,6 @@
 
 -- copilot
 
-vim.api.nvim_set_keymap(
-  "i",
-  "<localleader><Tab>",
-  'copilot#Accept("\\<CR>")',
-  { expr = true, noremap = true, silent = true }
-)
-
-vim.g.copilot_no_tab_map = vim.v["true"]
-
 -- lsp
 
 local lspconfig = require("lspconfig")
@@ -79,3 +70,22 @@ local function close_inactive_bufs()
 end
 
 vim.api.nvim_create_user_command("Bdi", close_inactive_bufs, {})
+vim.api.nvim_set_keymap(
+  "i",
+  "<C-e>",
+  'cmp#complete({config = {sources = {{name = "emmet_language_server"}}}})',
+  { noremap = true, silent = true, expr = true }
+)
+
+local ls = require("luasnip")
+local s = ls.snippet
+local i = ls.insert_node
+local t = ls.text_node
+
+ls.snippets = {
+  all = {
+    s("---", {
+      t("// ----------------------------------------------------------------------------"),
+    }),
+  },
+}
