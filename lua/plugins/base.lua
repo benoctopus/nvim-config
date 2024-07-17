@@ -40,7 +40,7 @@ return {
       }
     end,
   },
-  { "akinsho/bufferline.nvim", enabled = false },
+  -- { "akinsho/bufferline.nvim", enabled = false },
   { 'rafi/awesome-vim-colorschemes' },
   {
     "LazyVim/LazyVim",
