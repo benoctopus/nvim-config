@@ -77,15 +77,28 @@ vim.api.nvim_set_keymap(
   { noremap = true, silent = true, expr = true }
 )
 
-local ls = require("luasnip")
-local s = ls.snippet
-local i = ls.insert_node
-local t = ls.text_node
+--------------------------------------------- Title Comment -------------------------------------
 
-ls.snippets = {
-  all = {
-    s("---", {
-      t("// ----------------------------------------------------------------------------"),
-    }),
-  },
-}
+local function create_titile_comment(title)
+  local total_len = 100
+  local line = "// "
+
+  if title == nil or string.len(title) == 0 then
+    return line .. string.rep("-", total_len - string.len(line))
+  end
+
+  local content_len = total_len - string.len(line)
+  local title_len = string.len(title)
+
+  line = line .. string.rep("-", (content_len / 2) - (title_len / 2)) .. " " .. title .. " "
+  return line .. string.rep("-", content_len - string.len(line))
+end
+
+vim.api.nvim_create_user_command("TitleComment", function(args)
+  local title = args.args
+  vim.print("Title: " .. title)
+  local title_comment = create_titile_comment(title)
+  vim.api.nvim_put({ title_comment }, "l", true, true)
+end, { nargs = "?" })
+
+vim.api.nvim_set_keymap("n", "<leader>tc", ":TitleComment ", { noremap = true, silent = true })
