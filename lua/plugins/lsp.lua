@@ -11,6 +11,12 @@ return {
   {
     "nvim-neotest/neotest-plenary",
     enabled = true,
+    {
+      "neovim/nvim-lspconfig",
+      opts = {
+        inlay_hints = { enabled = false },
+      },
+    },
   },
   {
     "nvim-neotest/neotest",
