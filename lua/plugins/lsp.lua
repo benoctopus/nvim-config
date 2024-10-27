@@ -1,8 +1,5 @@
 return {
   {
-    "VonHeikemen/lsp-zero.nvim",
-  },
-  {
     "folke/neodev.nvim",
     opts = {
       library = { plugins = { "neotest" }, types = true },

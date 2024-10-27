@@ -31,3 +31,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.api.nvim_create_augroup("lazyvim_auto_create_dir", { clear = true })
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "make",
+  command = "setlocal autoindent noexpandtab tabstop=4 shiftwidth=4",
+})
