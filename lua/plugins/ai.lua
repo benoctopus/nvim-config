@@ -1,4 +1,5 @@
 return {
+  { "echasnovski/mini.ai", disabled = true },
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
@@ -17,7 +18,7 @@ return {
       "MunifTanjim/nui.nvim",
       --- The below dependencies are optional,
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      -- "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
@@ -25,6 +26,9 @@ return {
         opts = {
           -- recommended settings
           default = {
+            behaviour = {
+              auto_suggestions = false,
+            },
             embed_image_as_base64 = false,
             prompt_for_file_name = false,
             drag_and_drop = {

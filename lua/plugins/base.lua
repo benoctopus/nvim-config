@@ -2,9 +2,9 @@
 -- stylua: ignore
 
 return {
-  {
-    dir = "~/code/vim-plugins/bdi.nvim"
-  },
+  -- {
+  --   dir = "~/code/vim-plugins/bdi.nvim"
+  -- },
   {
     "echasnovski/mini.animate",
     enabled = false,
@@ -148,6 +148,7 @@ return {
   },
   {
     'github/copilot.vim',
+    enabled = false,
     config = function()
       vim.api.nvim_set_keymap(
         "i",
