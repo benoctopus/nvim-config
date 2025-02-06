@@ -4,6 +4,13 @@
 --
 --
 
+-- Yank current buffer's relative path
+vim.keymap.set("n", "<leader><leader>y", function()
+  local relative_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+  vim.fn.setreg("+", relative_path)
+  vim.notify('Copied "' .. relative_path .. '" to clipboard')
+end, { desc = "Yank relative path" })
+
 -- copilot
 
 -- lsp
