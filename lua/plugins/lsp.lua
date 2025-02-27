@@ -15,6 +15,51 @@ return {
       },
     },
   },
+  {
+    "wojciech-kulik/xcodebuild.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-tree.lua", -- (optional) to manage project files
+      "stevearc/oil.nvim", -- (optional) to manage project files
+      "nvim-treesitter/nvim-treesitter", -- (optional) for Quick tests support (required Swift parser)
+    },
+    config = function()
+      require("xcodebuild").setup({
+        -- put some options here or leave it empty to use default settings
+      })
+    end,
+  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   event = { "BufReadPre", "BufNewFile" },
+  --   dependencies = {
+  --     "hrsh7th/cmp-nvim-lsp",
+  --     { "antosha417/nvim-lsp-file-operations", config = true },
+  --   },
+  --   config = function()
+  --     local lspconfig = require("lspconfig")
+  --     local cmp_nvim_lsp = require("cmp_nvim_lsp")
+  --     local keymap = vim.keymap -- for conciseness
+  --     local opts = { noremap = true, silent = true }
+  --
+  --     local capabilities = cmp_nvim_lsp.default_capabilities()
+  --     local defaultLSPs = {
+  --       "sourcekit",
+  --     }
+  --
+  --     for _, lsp in ipairs(defaultLSPs) do
+  --       lspconfig[lsp].setup({
+  --         capabilities = capabilities,
+  --         -- on_attach = on_attach,
+  --         cmd = lsp == "sourcekit" and { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) } or nil,
+  --       })
+  --     end
+  --
+  --     opts.desc = "Show line diagnostics"
+  --     keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+  --   end,
+  -- },
   -- {
   --   "folke/trouble.nvim",
   --   branch = "dev", -- IMPORTANT!
