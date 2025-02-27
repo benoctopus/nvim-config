@@ -148,7 +148,7 @@ return {
   },
   {
     'github/copilot.vim',
-    enabled = false,
+    enabled = true,
     config = function()
       vim.api.nvim_set_keymap(
         "i",

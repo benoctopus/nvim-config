@@ -11,6 +11,13 @@ vim.keymap.set("n", "<leader><leader>y", function()
   vim.notify('Copied "' .. relative_path .. '" to clipboard')
 end, { desc = "Yank relative path" })
 
+-- Yank current buffer's absolute path
+vim.keymap.set("n", "<leader><leader>Y", function()
+  local absolute_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":p")
+  vim.fn.setreg("+", absolute_path)
+  vim.notify('Copied "' .. absolute_path .. '" to clipboard')
+end, { desc = "Yank absolute path" })
+
 -- copilot
 
 -- lsp
