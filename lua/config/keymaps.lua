@@ -1,9 +1,3 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
---
---
-
 -- Yank current buffer's relative path
 vim.keymap.set("n", "<leader><leader>y", function()
   local relative_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
@@ -18,15 +12,7 @@ vim.keymap.set("n", "<leader><leader>Y", function()
   vim.notify('Copied "' .. absolute_path .. '" to clipboard')
 end, { desc = "Yank absolute path" })
 
--- copilot
-
--- lsp
-
-local lspconfig = require("lspconfig")
-
-vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+-- LSP Keybinds
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -37,6 +23,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { buffer = ev.buf }
+
+    vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, opts)
@@ -73,6 +64,7 @@ local is_visible = function(bufnr)
 
   return false
 end
+
 local function close_inactive_bufs()
   local bufs = vim.api.nvim_list_bufs()
 

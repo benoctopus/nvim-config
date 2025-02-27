@@ -10,13 +10,24 @@ return {
       "sources.default",
     },
     dependencies = {
-      "rafamadriz/friendly-snippets",
-      -- add blink.compat to dependencies
       {
         "saghen/blink.compat",
         optional = true, -- make optional so it's only enabled if any extras need it
         opts = {},
         version = not vim.g.lazyvim_blink_main and "*",
+      },
+      {
+        "L3MON4D3/LuaSnip",
+        -- follow latest release.
+        version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+        -- install jsregexp (optional!).
+        build = "make install_jsregexp",
+        config = function()
+          require("luasnip.loaders.from_vscode").load()
+          require("luasnip.loaders.from_snipmate").load({
+            paths = { vim.fn.expand("~/") .. ".config/nvim/snippets" },
+          })
+        end,
       },
     },
     event = "InsertEnter",
@@ -25,7 +36,8 @@ return {
     ---@type blink.cmp.Config
     opts = {
       snippets = {
-        expand = function(snippet, _)
+        preset = "luasnip",
+        expand = function(snippet)
           return LazyVim.cmp.expand(snippet)
         end,
       },
@@ -66,8 +78,7 @@ return {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer" },
-        cmdline = {},
+        default = { "snippets", "lsp", "path", "buffer" },
       },
 
       keymap = {
@@ -76,6 +87,7 @@ return {
     },
     ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
     config = function(_, opts)
+      require("luasnip.loaders.from_snipmate").lazy_load()
       -- setup compat sources
       local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do
@@ -90,20 +102,20 @@ return {
       end
 
       -- add ai_accept to <Tab> key
-      if not opts.keymap["<Tab>"] then
-        if opts.keymap.preset == "super-tab" then -- super-tab
-          opts.keymap["<Tab>"] = {
-            require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
-        else -- other presets
-          opts.keymap["<Tab>"] = {
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
-        end
-      end
+      -- if not opts.keymap["<Tab>"] then
+      --   if opts.keymap.preset == "super-tab" then -- super-tab
+      --     opts.keymap["<Tab>"] = {
+      --       require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
+      --       LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+      --       "fallback",
+      --     }
+      --   else -- other presets
+      --     opts.keymap["<Tab>"] = {
+      --       LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+      --       "fallback",
+      --     }
+      --   end
+      -- end
 
       -- Unset custom prop to pass blink.cmp validation
       opts.sources.compat = nil
@@ -139,82 +151,4 @@ return {
       require("blink.cmp").setup(opts)
     end,
   },
-  -- Use <tab> for completion and snippets (supertab)
-  -- first: disable default <tab> and <s-tab> behavior in LuaSnip
-  --
-  -- {
-  --   "L3MON4D3/LuaSnip",
-  --   config = function()
-  --     require("luasnip.loaders.from_vscode").lazy_load()
-  --   end,
-  --   keys = function()
-  --     return {}
-  --   end,
-  -- },
-  -- -- then: setup supertab in cmp
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   dependencies = {
-  --     "hrsh7th/cmp-emoji",
-  --     "hrsh7th/cmp-nvim-lsp",
-  --     "hrsh7th/cmp-nvim-lua",
-  --     "hrsh7th/cmp-buffer",
-  --     "hrsh7th/cmp-path",
-  --     "L3MON4D3/LuaSnip",
-  --     "dcampos/cmp-emmet-vim",
-  --     "mattn/emmet-vim",
-  --     "hrsh7th/cmp-nvim-lua",
-  --   },
-  --   ---@param opts cmp.ConfigSchema
-  --   opts = function(_, opts)
-  --     local cmp = require("cmp")
-  --     opts.experimental = { ghost_text = false }
-  --
-  --     cmp.config.sources({
-  --       { name = "emmet_vim", priority = 1000 },
-  --       { name = "luasnip" },
-  --       { name = "nvim_lsp" },
-  --       { name = "nvim_lua" },
-  --       { name = "buffer" },
-  --       { name = "emoji" },
-  --     })
-  --     -- `:` cmdline setup.
-  --     -- opts.sources = {
-  --     --   { name = "nvim_lsp" },
-  --     --   { name = "emmet_vim" },
-  --     --   { name = "nvim_lua" },
-  --     --   { name = "path" },
-  --     --   -- { name = "luasnip" },
-  --     --   -- { name = "buffer" },
-  --     --   -- { name = "emoji" },
-  --     -- }
-  --
-  --     -- local luasnip = require("luasnip")
-  --     -- opts.snippet = {
-  --     --   expand = function(args)
-  --     --     require("luasnip").lsp_expand(args.body)
-  --     --   end,
-  --     -- }
-  --     --
-  --     opts.mapping = cmp.mapping.preset.insert({
-  --       ["<C-J>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-  --       ["<C-K>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-  --       -- ["<S-TAB>"] = cmp.mapping(function(fallback)
-  --       --   if luasnip.expand_or_jumpable() then
-  --       --     luasnip.expand_or_jump()
-  --       --   else
-  --       --     fallback()
-  --       --   end
-  --       -- end, { "i", "s" }),
-  --       ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-  --       --   ["<Tab>"] = cmp.mapping(function(fallback)
-  --       --     if cmp.visible() then
-  --       --       cmp.confirm({ select = true })
-  --       --     else
-  --       --       fallback()
-  --       --     end
-  --       --   end, { "i", "s" }),
-  --     })
-  --   end,
-  -- },
 }

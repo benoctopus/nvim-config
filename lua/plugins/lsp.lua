@@ -1,11 +1,5 @@
 return {
   {
-    "folke/neodev.nvim",
-    opts = {
-      library = { plugins = { "neotest" }, types = true },
-    },
-  },
-  {
     "nvim-neotest/neotest-plenary",
     enabled = true,
     {
@@ -31,9 +25,9 @@ return {
     end,
   },
   -- {
-  --   "neovim/nvim-lspconfig",
   --   event = { "BufReadPre", "BufNewFile" },
   --   dependencies = {
+  --   "neovim/nvim-lspconfig",
   --     "hrsh7th/cmp-nvim-lsp",
   --     { "antosha417/nvim-lsp-file-operations", config = true },
   --   },
@@ -60,43 +54,6 @@ return {
   --     keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
   --   end,
   -- },
-  -- {
-  --   "folke/trouble.nvim",
-  --   branch = "dev", -- IMPORTANT!
-  --   keys = {
-  --     {
-  --       "<leader>xx",
-  --       "<cmd>Trouble diagnostics toggle<cr>",
-  --       desc = "Diagnostics (Trouble)",
-  --     },
-  --     {
-  --       "<leader>xX",
-  --       "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-  --       desc = "Buffer Diagnostics (Trouble)",
-  --     },
-  --     {
-  --       "<leader>cs",
-  --       "<cmd>Trouble symbols toggle focus=false<cr>",
-  --       desc = "Symbols (Trouble)",
-  --     },
-  --     {
-  --       "<leader>cl",
-  --       "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-  --       desc = "LSP Definitions / references / ... (Trouble)",
-  --     },
-  --     {
-  --       "<leader>xL",
-  --       "<cmd>Trouble loclist toggle<cr>",
-  --       desc = "Location List (Trouble)",
-  --     },
-  --     {
-  --       "<leader>xQ",
-  --       "<cmd>Trouble qflist toggle<cr>",
-  --       desc = "Quickfix List (Trouble)",
-  --     },
-  --   },
-  --   opts = {}, -- for default options, refer to the configuration section for custom setup.
-  -- },
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -104,34 +61,47 @@ return {
       servers = {
         sqlls = {
           -- Set the root directory to the git repository root
+          command = "sql-language-server",
+          args = { "up", "--method", "stdio" },
           root_dir = function(fname)
             return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
           end,
           filetypes = { "sql" },
           settings = {
-            sqlLanguageServer = function()
+            sqlLanguageServer = (function()
               -- Try to read the sqlls config file from repo root, cwd, or home dir
-              local possible_paths = {
-                vim.fs.find(".sqllsrc.json", { upward = true })[1], -- repo root
-                vim.fn.getcwd() .. "/.sqllsrc.json", -- current working dir
-                vim.fn.expand("~/.sqllsrc.json") -- user's home dir
-              }
-              
+              local possible_paths =
+                vim.fs.find(".sqllsrc.json", { upward = true, stop = vim.fn.expand("~/"), limit = 10 })
+
+              local config = { connections = {} }
+
               for _, path in ipairs(possible_paths) do
-                if path and vim.fn.filereadable(path) == 1 then
-                  local content = vim.fn.readfile(path)
-                  if content and #content > 0 then
-                    local ok, config = pcall(vim.fn.json_decode, table.concat(content, "\n"))
-                    if ok and config then
-                      return config
+                local content = vim.fn.readfile(path)
+                if content and #content > 0 then
+                  local ok, parsed = pcall(vim.fn.json_decode, table.concat(content, "\n"))
+                  if ok and parsed then
+                    -- Special handling for connections array
+                    if parsed.connections then
+                      for _, conn in ipairs(parsed.connections) do
+                        if conn.projectPaths then
+                          for _, pp in ipairs(conn.projectPaths) do
+                            if pp == "." then
+                              conn.projectPaths = { vim.fs.dirname(path) }
+                              break
+                            end
+                          end
+                          table.insert(config.connections, conn)
+                        end
+                      end
+                      parsed.connections = nil
                     end
+                    -- Merge the rest of the config normally
+                    config = vim.tbl_deep_extend("force", config, parsed)
                   end
                 end
               end
-              
-              -- Return empty table if no config file found or couldn't be parsed
-              return {}
-            end(),
+              return config
+            end)(),
           },
         },
       },

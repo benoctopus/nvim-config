@@ -2,53 +2,6 @@
 -- stylua: ignore
 
 return {
-  -- {
-  --   dir = "~/code/vim-plugins/bdi.nvim"
-  -- },
-  {
-    "echasnovski/mini.animate",
-    enabled = false,
-    event = "VeryLazy",
-    opts = function()
-      -- don't use animate when scrolling with the mouse
-      local mouse_scrolled = false
-      for _, scroll in ipairs({ "Up", "Down" }) do
-        local key = "<ScrollWheel" .. scroll .. ">"
-        vim.keymap.set({ "", "i" }, key, function()
-          mouse_scrolled = true
-          return key
-        end, { expr = true })
-      end
-
-      local animate = require("mini.animate")
-      return {
-        resize = {
-          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
-        },
-        scroll = {
-          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
-          subscroll = animate.gen_subscroll.equal({
-            predicate = function(total_scroll)
-              if mouse_scrolled then
-                mouse_scrolled = false
-                return false
-              end
-              return total_scroll > 1
-            end,
-          }),
-        },
-      }
-    end,
-  },
-  -- { "akinsho/bufferline.nvim", enabled = false },
-  { 'rafi/awesome-vim-colorschemes' },
-  {
-    "LazyVim/LazyVim",
-    dependencies = {'rafi/awesome-vim-colorschemes'},
-    opts = {
-      colorscheme = "alduin",
-    },
-  },
   {
   "francoiscabrol/ranger.vim",
     cmd = {
@@ -64,35 +17,43 @@ return {
     }
   },
   {
-    "telescope.nvim",
+    "nvim-telescope/telescope.nvim",
     dependencies = {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      }, 
+      {
+        "benfowler/telescope-luasnip.nvim"
+      }
     },
-    opts = function(_, opts)
-      vim.tbl_deep_extend("force", opts.defaults or {}, {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-        winblend = 0,
-      })
-      opts.defaults.mappings = opts.defaults.mappings or {}
-      vim.tbl_deep_extend("force", opts.defaults.mappings.i or {}, {
-        ["<C-j>"] = "move_selection_next",
-        ["<C-k>"] = "move_selection_previous"
-      })
-    end,
     config = function()
       require("telescope").load_extension("fzf")
+      require("telescope").load_extension("luasnip")
     end,
     keys = {
       {"<leader>/", false},
       -- change a keymap
       { "<leader>ff",
-        function () require('telescope.builtin').find_files({ hidden = true }) end,
-        desc = "Find Files"
+        function()
+          local ok, _ = pcall(require("telescope.utils").get_git_root)
+          local opts = { hidden = true, file_ignore_patterns = { ".git/" } }
+          if ok then
+            opts.cwd = require("telescope.utils").get_git_root()
+          end
+          require('telescope.builtin').find_files(opts)
+        end,
+        desc = "Find Files",
+        silent = true,
+        noremap = true,
       },
-      { "<leader>fg", function() require('telescope.builtin').live_grep() end, desc = "Find Files" },
+      { 
+        "<leader>fg", 
+        function() require('telescope.builtin').live_grep() end, 
+        desc = "Live Grep",
+        silent = true,
+        noremap = true,
+      },
       -- add a keymap to browse plugin files
       {
         "<leader>fp",
@@ -124,18 +85,9 @@ return {
     },
   },
   {
-    'BurntSushi/ripgrep'
-  },
-  {
-    'brooth/far.vim'
-  },
-  {
     'easymotion/vim-easymotion',
     enabled = false
 
-  },
-  {
-    'rhysd/vim-clang-format'
   },
   {
     'http://github.com/tpope/vim-surround'

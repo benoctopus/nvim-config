@@ -46,7 +46,6 @@ return {
       vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl" })
     end,
   },
-  { "folke/neodev.nvim", opts = {} },
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
