@@ -110,9 +110,7 @@ return {
           filetypes = { "sql" },
           settings = {
             sqlLanguageServer = {
-              connections = {
-                -- You can configure your database connections here if needed
-              },
+              // Try to read the sqlls config file, .sqllsrc.json from either the repo root, current working dir, or user's home dir and insert it here AI!
             },
           },
         },
