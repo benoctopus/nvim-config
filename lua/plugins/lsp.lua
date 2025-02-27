@@ -109,9 +109,29 @@ return {
           end,
           filetypes = { "sql" },
           settings = {
-            sqlLanguageServer = {
-              // Try to read the sqlls config file, .sqllsrc.json from either the repo root, current working dir, or user's home dir and insert it here AI!
-            },
+            sqlLanguageServer = function()
+              -- Try to read the sqlls config file from repo root, cwd, or home dir
+              local possible_paths = {
+                vim.fs.find(".sqllsrc.json", { upward = true })[1], -- repo root
+                vim.fn.getcwd() .. "/.sqllsrc.json", -- current working dir
+                vim.fn.expand("~/.sqllsrc.json") -- user's home dir
+              }
+              
+              for _, path in ipairs(possible_paths) do
+                if path and vim.fn.filereadable(path) == 1 then
+                  local content = vim.fn.readfile(path)
+                  if content and #content > 0 then
+                    local ok, config = pcall(vim.fn.json_decode, table.concat(content, "\n"))
+                    if ok and config then
+                      return config
+                    end
+                  end
+                end
+              end
+              
+              -- Return empty table if no config file found or couldn't be parsed
+              return {}
+            end(),
           },
         },
       },
