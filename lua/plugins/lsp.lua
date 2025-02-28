@@ -10,6 +10,34 @@ return {
     },
   },
   {
+    "nanotee/sqls.nvim",
+    config = function()
+      local function get_config()
+        local config_path = vim.fs.find(".sqlsrc.json", { upward = true })[1]
+        if config_path and vim.fn.filereadable(config_path) == 1 then
+          local content = vim.fn.readfile(config_path)
+          if content and #content > 0 then
+            local ok, config = pcall(vim.fn.json_decode, table.concat(content, "\n"))
+            if ok and config then
+              return config
+            end
+          end
+        end
+      end
+
+      require("lspconfig").sqls.setup({
+        on_attach = function(client, bufnr)
+          require("sqls").on_attach(client, bufnr)
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+        settings = {
+          sqls = get_config(),
+        },
+      })
+    end,
+  },
+  {
     "wojciech-kulik/xcodebuild.nvim",
     dependencies = {
       "nvim-telescope/telescope.nvim",
@@ -24,6 +52,44 @@ return {
       })
     end,
   },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = {
+  --     --     -- make sure mason installs the server
+  --     servers = {
+  --       sqlls = {
+  --         -- Set the root directory to the git repository root
+  --         root_dir = function(fname)
+  --           return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+  --         end,
+  --         filetypes = { "sql" },
+  --         settings = {
+  --           sqlLanguageServer = (function()
+  --             -- Try to read the sqlls config file from repo root, cwd, or home dir
+  --             local possible_paths = {
+  --               vim.fs.find(".sqllsrc.json", { upward = true })[1], -- repo root
+  --               vim.fn.getcwd() .. "/.sqllsrc.json", -- current working dir
+  --               vim.fn.expand("~/.sqllsrc.json"), -- user's home dir
+  --             }
+  --             for _, path in ipairs(possible_paths) do
+  --               if path and vim.fn.filereadable(path) == 1 then
+  --                 local content = vim.fn.readfile(path)
+  --                 if content and #content > 0 then
+  --                   local ok, config = pcall(vim.fn.json_decode, table.concat(content, "\n"))
+  --                   if ok and config then
+  --                     return config
+  --                   end
+  --                 end
+  --               end
+  --             end
+  --             -- Return empty table if no config file found or couldn't be parsed
+  --             return {}
+  --           end)(),
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
   -- {
   --   event = { "BufReadPre", "BufNewFile" },
   --   dependencies = {
@@ -54,57 +120,5 @@ return {
   --     keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
   --   end,
   -- },
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      --     -- make sure mason installs the server
-      servers = {
-        sqlls = {
-          -- Set the root directory to the git repository root
-          command = "sql-language-server",
-          args = { "up", "--method", "stdio" },
-          root_dir = function(fname)
-            return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-          end,
-          filetypes = { "sql" },
-          settings = {
-            sqlLanguageServer = (function()
-              -- Try to read the sqlls config file from repo root, cwd, or home dir
-              local possible_paths =
-                vim.fs.find(".sqllsrc.json", { upward = true, stop = vim.fn.expand("~/"), limit = 10 })
-
-              local config = { connections = {} }
-
-              for _, path in ipairs(possible_paths) do
-                local content = vim.fn.readfile(path)
-                if content and #content > 0 then
-                  local ok, parsed = pcall(vim.fn.json_decode, table.concat(content, "\n"))
-                  if ok and parsed then
-                    -- Special handling for connections array
-                    if parsed.connections then
-                      for _, conn in ipairs(parsed.connections) do
-                        if conn.projectPaths then
-                          for _, pp in ipairs(conn.projectPaths) do
-                            if pp == "." then
-                              conn.projectPaths = { vim.fs.dirname(path) }
-                              break
-                            end
-                          end
-                          table.insert(config.connections, conn)
-                        end
-                      end
-                      parsed.connections = nil
-                    end
-                    -- Merge the rest of the config normally
-                    config = vim.tbl_deep_extend("force", config, parsed)
-                  end
-                end
-              end
-              return config
-            end)(),
-          },
-        },
-      },
-    },
-  },
+  { "nanotee/sqls.nvim" },
 }

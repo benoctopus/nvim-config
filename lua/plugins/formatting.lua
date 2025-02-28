@@ -2,18 +2,25 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
-      default_format_opts = {
-
-        formatters_by_ft = {
-          markdown = { "markdownlint" },
-          graphql = { "prettier" },
+      formatters = {
+        sqlfluff = {
+          command = "sqlfluff",
+          cwd = require("conform.util").root_file({ ".editorconfig", "package.json", ".sqlsrc", ".git" }),
+          args = {
+            "fix",
+            "--dialect=postgres",
+            "-",
+          },
         },
+      },
+      formatters_by_ft = {
+        markdown = { "markdownlint" },
+        graphql = { "prettier" },
+        sql = { "sqlfluff" },
+      },
+      default_format_opts = {
         format = {
           timeout_ms = 5000,
-          lsp_fallback = true,
-        },
-        format_on_save = {
-          timeout_ms = 10000,
           lsp_fallback = true,
         },
       },
@@ -31,4 +38,19 @@ return {
       },
     },
   },
+  -- {
+  --   "mfussenegger/nvim-lint",
+  --   opts = {
+  --     linters = {
+  --       sqlfluff = {
+  --         args = {
+  --           "lint",
+  --           "--format=json",
+  --           -- note: users will have to replace the --dialect argument accordingly
+  --           "--dialect=postgres",
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
 }
