@@ -36,6 +36,14 @@ return {
         end,
         desc = "Live Grep",
       },
+      -- Alternative keybinding for live grep in case of conflicts
+      {
+        "<leader>fl",
+        function()
+          require("telescope.builtin").live_grep()
+        end,
+        desc = "Live Grep (alt)",
+      },
       -- add a keymap to browse plugin files
       {
         "<leader>fp",
