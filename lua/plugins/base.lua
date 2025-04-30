@@ -2,30 +2,61 @@
 -- stylua: ignore
 
 return {
+  -- {
+  --   "LazyVim/LazyVim",
+  --   dependencies = {"rebelot/kanagawa.nvim"},
+  --   opts = {
+  --     colorscheme = "kanagawa-dragon",
+  --   },
+  -- },
+  -- {
+  --   "rebelot/kanagawa.nvim",
+  --   enabled = false,
+  --   opts = {
+  --     overrides = function()
+  --       return {
+  --         -- Change the color of strings
+  --         String = { fg = '#916546' }, -- Change this hex color to your preferred string color
+  --         -- You can also customize other syntax elements if needed
+  --         -- Add gray borders between splits
+  --         VertSplit = { fg = '#555555' }, -- Medium gray for vertical split borders
+  --         WinSeparator = { fg = '#555555' }, -- Same color for window separators
+  --       }
+  --     end,
+  --   },
+  -- },
   {
     "LazyVim/LazyVim",
-    dependencies = {"rebelot/kanagawa.nvim"},
+   dependencies = {'rafi/awesome-vim-colorschemes'},
     opts = {
-      colorscheme = "kanagawa-dragon",
+      colorscheme = "alduin",
     },
   },
   {
-    "rebelot/kanagawa.nvim",
-    opts = {
-      overrides = function()
-        return {
-          -- Change the color of strings
-          String = { fg = '#916546' }, -- Change this hex color to your preferred string color
-          -- You can also customize other syntax elements if needed
-          -- Add gray borders between splits
-          VertSplit = { fg = '#555555' }, -- Medium gray for vertical split borders
-          WinSeparator = { fg = '#555555' }, -- Same color for window separators
-        }
+      "salkin-mada/openscad.nvim",
+      config = function()
+          vim.g.openscad_load_snippets = true
+          require("openscad")
       end,
+      dependencies = { "L3MON4D3/LuaSnip", "junegunn/fzf.vim" },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- Add the OpenSCAD server configuration
+        openscad_ls = {
+          cmd = { "openscad-lsp", "--stdio" },
+          filetypes = { "openscad", "scad" },
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(".git")(fname) or vim.loop.cwd()
+          end,
+        },
+      },
     },
   },
   {
-  "francoiscabrol/ranger.vim",
+    "francoiscabrol/ranger.vim",
     cmd = {
       "Ranger",
       "RangerWorkingDirectory",

@@ -17,22 +17,6 @@ return {
 		end,
 	},
   {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      {
-        "williamboman/mason.nvim",
-        opts = function(_, opts)
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { "delve" })
-        end,
-      },
-      {
-        "leoluz/nvim-dap-go",
-        config = true,
-      },
-    },
-  },
-  {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
@@ -52,13 +36,6 @@ return {
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, { "delve" })
     end,
-  },
-  {
-    "leoluz/nvim-dap-go",
-    config = true,
-    dependencies = {
-      "mfussenegger/nvim-dap"
-    }
   },
   {
     "stevearc/conform.nvim",
