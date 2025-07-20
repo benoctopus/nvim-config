@@ -1,4 +1,5 @@
 return {
+  { "https://github.com/shumphrey/fugitive-gitlab.vim.git" },
   {
     "tpope/vim-fugitive",
     dependencies = {

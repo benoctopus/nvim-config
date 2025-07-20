@@ -25,3 +25,5 @@ vim.g.snacks_animate = false
 vim.g.ranger_map_keys = 0
 
 vim.opt.rtp:append("~/.config/nvim/snippets")
+
+vim.g.fugitive_gitlab_domains = { ["ssh.gitlab.1password.io"] = "https://gitlab.1password.io" }
