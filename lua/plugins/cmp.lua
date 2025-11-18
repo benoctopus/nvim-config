@@ -1,5 +1,19 @@
 return {
-  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    enabled = false,
+
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = true, -- Set this to true to show hidden files by default
+          hide_dotfiles = false, -- Set to false to prevent dimming of dotfiles
+          hide_gitignored = true,
+        },
+      },
+      -- other neo-tree options
+    },
+  },
   {
     "saghen/blink.cmp",
     version = not vim.g.lazyvim_blink_main and "*",

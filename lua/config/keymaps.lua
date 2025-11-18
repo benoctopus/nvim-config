@@ -87,7 +87,8 @@ vim.api.nvim_set_keymap(
 
 local function create_titile_comment(title)
   local total_len = 100
-  local line = "// "
+  local comment_string = vim.bo.commentstring or "// %s"
+  local line = vim.split(comment_string, "%%s")[1]
 
   if title == nil or string.len(title) == 0 then
     return line .. string.rep("-", total_len - string.len(line))
@@ -96,7 +97,7 @@ local function create_titile_comment(title)
   local content_len = total_len - string.len(line)
   local title_len = string.len(title)
 
-  line = line .. string.rep("-", (content_len / 2) - (title_len / 2)) .. " " .. title .. " "
+  line = line .. string.rep("-", math.floor((content_len / 2) - (title_len / 2))) .. " " .. title .. " "
   return line .. string.rep("-", content_len - string.len(line))
 end
 

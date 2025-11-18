@@ -3,8 +3,3 @@
 -- Add any additional autocmds here
 --
 --#region
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "make",
-  command = "setlocal autoindent noexpandtab tabstop=4 shiftwidth=4",
-})

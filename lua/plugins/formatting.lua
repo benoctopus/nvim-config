@@ -27,7 +27,6 @@ return {
     },
     keys = {
       {
-        "n",
         "<leader>cf",
         function()
           require("conform").format({

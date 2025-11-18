@@ -67,6 +67,9 @@ return {
     keys = {
       { "<leader>tt", "<cmd>RangerWorkingDirectory<cr>" },
       { "<leader>ft", "<cmd>Ranger<cr>" },
+      -- { "<leader>ft", "<cmd>Neotree focus<cr>" },
+      -- { "<leader>fT", "<cmd>Neotree close<cr>" },
+
     }
   },
   {
