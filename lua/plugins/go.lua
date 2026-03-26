@@ -20,7 +20,9 @@ return {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt", "golines", "yaml-language-server", "terraform-ls" })
+      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt", 
+        -- "golines", 
+        "yaml-language-server", "terraform-ls" })
     end,
   },
   {
@@ -51,13 +53,16 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        go = { "golines", "goimports" }
-      },
-      formatters = {
-        golines = {
-          args = { "-m", "100", "--base-formatter", "gofumpt" }
+        go = { 
+          -- "golines", 
+          "goimports" 
         }
-      }
+      },
+      -- formatters = {
+      --   golines = {
+      --     args = { "-m", "100", "--base-formatter", "gofumpt" }
+      --   }
+      -- }
     }
   },
   -- {

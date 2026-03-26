@@ -14,13 +14,14 @@ return {
         },
       },
       formatters_by_ft = {
+        json = { "prettier" },
         markdown = { "markdownlint" },
         graphql = { "prettier" },
         sql = { "sqlfluff" },
       },
       default_format_opts = {
         format = {
-          timeout_ms = 5000,
+          timeout_ms = 10000,
           lsp_fallback = true,
         },
       },
