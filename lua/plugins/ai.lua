@@ -1,64 +1,85 @@
 return {
-  -- {
-  --   "yetone/avante.nvim",
-  --   enabled = false,
-  --   event = "VeryLazy",
-  --   lazy = false,
-  --   version = false, -- set this if you want to always pull the latest change
-  --   opts = {
-  --     -- add any opts here
-  --   },
-  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  --   build = "make",
-  --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-  --   dependencies = {
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "stevearc/dressing.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --     --- The below dependencies are optional,
-  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-  --     -- "zbirenbaum/copilot.lua", -- for providers='copilot'
-  --     {
-  --       -- support for image pasting
-  --       "HakonHarnes/img-clip.nvim",
-  --       event = "VeryLazy",
-  --       opts = {
-  --         -- recommended settings
-  --         default = {
-  --           behaviour = {
-  --             auto_suggestions = false,
-  --           },
-  --           embed_image_as_base64 = false,
-  --           prompt_for_file_name = false,
-  --           drag_and_drop = {
-  --             insert_mode = true,
-  --           },
-  --           -- required for Windows users
-  --           use_absolute_path = true,
-  --         },
-  --       },
-  --     },
-  --     {
-  --       -- Make sure to set this up properly if you have lazy=true
-  --       "MeanderingProgrammer/render-markdown.nvim",
-  --       opts = {
-  --         file_types = { "markdown", "Avante" },
-  --       },
-  --       ft = { "markdown", "Avante" },
-  --     },
-  --   },
-  -- },
-  -- {
-  --   "sourcegraph/sg.nvim",
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim", --[[ "nvim-telescope/telescope.nvim ]]
-  --   },
-  --   config = function()
-  --     require("sg").setup({})
-  --   end,
-  --
-  --   -- If you have a recent version of lazy.nvim, you don't need to add this!
-  --   build = "nvim -l build/init.lua",
-  -- },
+
+  {
+    "tannaurus/nvim-arbiter",
+    tag = "v0.0.8",
+    build = function()
+      require("arbiter.build").download_or_build_binary()
+    end,
+    opts = {
+      backend = "cursor",
+      review = {
+        default_ref = "main",
+      },
+    },
+  },
+  {
+    "carlos-algms/agentic.nvim",
+
+    --- @type agentic.PartialUserConfig
+    opts = {
+      -- Any ACP-compatible provider works. Built-in: "claude-agent-acp" | "gemini-acp" | "codex-acp" | "opencode-acp" | "cursor-acp" | "copilot-acp" | "auggie-acp" | "mistral-vibe-acp" | "cline-acp" | "goose-acp"
+      provider = "cursor-acp", -- setting the name here is all you need to get started
+    },
+
+    -- these are just suggested keymaps; customize as desired
+    keys = {
+      {
+        "<C-\\>",
+        function()
+          require("agentic").toggle()
+        end,
+        mode = { "n", "v", "i" },
+        desc = "Toggle Agentic Chat",
+      },
+      {
+        "<C-'>",
+        function()
+          require("agentic").add_selection_or_file_to_context()
+        end,
+        mode = { "n", "v" },
+        desc = "Add file or selection to Agentic to Context",
+      },
+      {
+        "<C-,>",
+        function()
+          require("agentic").new_session()
+        end,
+        mode = { "n", "v", "i" },
+        desc = "New Agentic Session",
+      },
+      {
+        "<A-i>r", -- ai Restore
+        function()
+          require("agentic").restore_session()
+        end,
+        desc = "Agentic Restore session",
+        silent = true,
+        mode = { "n", "v", "i" },
+      },
+      {
+        "<leader>ad", -- ai Diagnostics
+        function()
+          require("agentic").add_current_line_diagnostics()
+        end,
+        desc = "Add current line diagnostic to Agentic",
+        mode = { "n" },
+      },
+      {
+        "<leader>aD", -- ai all Diagnostics
+        function()
+          require("agentic").add_buffer_diagnostics()
+        end,
+        desc = "Add all buffer diagnostics to Agentic",
+        mode = { "n" },
+      },
+    },
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    -- ...
+    opts = {
+      file_types = { "markdown", "md", "AgenticChat" },
+    },
+  },
 }
