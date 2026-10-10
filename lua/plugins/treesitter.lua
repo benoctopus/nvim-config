@@ -33,6 +33,7 @@ return {
         "sql",
         "prisma",
         "starlark",
+        "slint",
       },
     },
   },

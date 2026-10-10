@@ -11,7 +11,7 @@ return {
         -- auto_suggestions_provider = "lmstudiofast",
 
         build = "nix develop -c make BUILD_FROM_SOURCE=true",
-        -- debug = true,
+        debug = true,
         behaviour = {
           enable_fastapply = true, -- Enable Fast Apply feature
           -- auto_suggestions = true,
@@ -71,19 +71,19 @@ return {
     "milanglacier/minuet-ai.nvim",
     enabled = local_ai,
     config = function()
-      require("vectorcode").setup({
-        -- number of retrieved documents
-        n_query = 1,
-      })
-
-      local has_vc, vectorcode_config = pcall(require, "vectorcode.config")
-      print(has_vc)
-      print(vectorcode_config)
-      local vectorcode_cacher = nil
-      if has_vc then
-        vectorcode_cacher = vectorcode_config.get_cacher_backend()
-      end
-      local RAG_Context_Window_Size = 8000
+      -- require("vectorcode").setup({
+      --   -- number of retrieved documents
+      --   n_query = 1,
+      -- })
+      --
+      -- local has_vc, vectorcode_config = pcall(require, "vectorcode.config")
+      -- print(has_vc)
+      -- print(vectorcode_config)
+      -- local vectorcode_cacher = nil
+      -- if has_vc then
+      --   vectorcode_cacher = vectorcode_config.get_cacher_backend()
+      -- end
+      -- local RAG_Context_Window_Size = 8000
 
       require("minuet").setup({
         -- provider = "openai_fim_compatible",
@@ -109,22 +109,22 @@ return {
             api_key = function()
               return "lmao"
             end,
-            template = {
-              prompt = function(pref, suff, _)
-                local prompt_message = ""
-                if has_vc then
-                  for _, file in ipairs(vectorcode_cacher.query_from_cache(0)) do
-                    prompt_message = prompt_message .. "<|file_sep|>" .. file.path .. "\n" .. file.document
-                  end
-                end
-
-                prompt_message = vim.fn.strcharpart(prompt_message, 0, RAG_Context_Window_Size)
-                print(prompt_message)
-
-                return prompt_message .. "<|fim_prefix|>" .. pref .. "<|fim_suffix|>" .. suff .. "<|fim_middle|>"
-              end,
-              suffix = false,
-            },
+            -- template = {
+            --   prompt = function(pref, suff, _)
+            --     local prompt_message = ""
+            --     if has_vc then
+            --       for _, file in ipairs(vectorcode_cacher.query_from_cache(0)) do
+            --         prompt_message = prompt_message .. "<|file_sep|>" .. file.path .. "\n" .. file.document
+            --       end
+            --     end
+            --
+            --     prompt_message = vim.fn.strcharpart(prompt_message, 0, RAG_Context_Window_Size)
+            --     print(prompt_message)
+            --
+            --     return prompt_message .. "<|fim_prefix|>" .. pref .. "<|fim_suffix|>" .. suff .. "<|fim_middle|>"
+            --   end,
+            --   suffix = false,
+            -- },
             name = "Ollama",
             end_point = "http://localhost:11434/v1/completions",
             model = "qwen2.5-coder:7b",
@@ -160,12 +160,12 @@ return {
       })
     end,
   },
-  {
-    "Davidyz/VectorCode",
-    enabled = local_ai,
-    version = "*",
-    build = "uv tool upgrade vectorcode", -- This helps keeping the CLI up-to-date
-    -- build = "pipx upgrade vectorcode", -- If you used pipx to install the CLI
-    dependencies = { "nvim-lua/plenary.nvim" },
-  },
+  -- {
+  --   "Davidyz/VectorCode",
+  --   enabled = local_ai,
+  --   version = "*",
+  --   build = "uv tool upgrade vectorcode", -- This helps keeping the CLI up-to-date
+  --   -- build = "pipx upgrade vectorcode", -- If you used pipx to install the CLI
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  -- },
 }
